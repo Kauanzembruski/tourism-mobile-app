@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AtuaSerra — Wireframes App Mobile</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- React e ReactDOM via CDN -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <!-- Babel para compilar JSX no navegador -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+    body {
+      background-color: #1A0A0E;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: auto;
+    }
+    /* Scrollbar sutil */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(201, 168, 76, 0.3);
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(201, 168, 76, 0.6);
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState } = React;
+
+    const WINE_RED = "#6B1A2A";
+    const WINE_LIGHT = "#8B2A3A";
+    const CREAM = "#FAF7F2";
+    const GOLD = "#C9A84C";
+    const GRAY = "#6B7280";
+    const LIGHT_GRAY = "#F3F4F6";
+    const WHITE = "#FFFFFF";
+    const TEXT_DARK = "#1A1A1A";
+    const TEXT_MID = "#4B4B4B";
+
+    const tags = {
+      wifi: "Wi-Fi",
+      pet: "Pet Friendly",
+      estacionamento: "Estacionamento",
+      acessivel: "Acessível",
+      termais: "Águas Termais",
+      kids: "Espaço Kids",
+    };
+
+    const cidades = [
+      { nome: "Bento Gonçalves", estabelecimentos: 87, emoji: "🍇" },
+      { nome: "Garibaldi", estabelecimentos: 54, emoji: "🥂" },
+      { nome: "Carlos Barbosa", estabelecimentos: 41, emoji: "🌿" },
+      { nome: "Cotiporã", estabelecimentos: 28, emoji: "🌄" },
+      { nome: "Nova Prata", estabelecimentos: 33, emoji: "🏔️" },
+      { nome: "Antônio Prado", estabelecimentos: 22, emoji: "⛪" },
+    ];
+
+    const destaques = [
+      { nome: "Vinícola Bebber", categoria: "Vinícola", cidade: "Garibaldi", tags: ["wifi", "estacionamento"], cor: "#7B3F00" },
+      { nome: "Cascata dos Calza", categoria: "Turismo", cidade: "Bento Gonçalves", tags: ["pet", "acessivel"], cor: "#1A4A3A" },
+      { nome: "Casa Bianchi", categoria: "Gastronomia", cidade: "Carlos Barbosa", tags: ["wifi", "kids"], cor: "#2A3A6A" },
+      { nome: "Termas Caldas Novas", categoria: "Hospedagem", cidade: "Nova Prata", tags: ["termais", "estacionamento"], cor: "#4A2A6A" },
+    ];
+
+    const estabelecimentos = [
+      { nome: "Vinícola Bebber", categoria: "Vinícola", cidade: "Garibaldi", avaliacao: 4.8, cor: "#7B3F00" },
+      { nome: "Restaurante Farina", categoria: "Gastronomia", cidade: "Bento Gonçalves", avaliacao: 4.6, cor: "#1A3A4A" },
+      { nome: "Pousada Vale Verde", categoria: "Hospedagem", cidade: "Cotiporã", avaliacao: 4.9, cor: "#1A4A2A" },
+      { nome: "Cascata dos Calza", categoria: "Turismo", cidade: "Bento Gonçalves", avaliacao: 4.7, cor: "#2A3A6A" },
+      { nome: "Cantina Gelain", categoria: "Gastronomia", cidade: "Carlos Barbosa", avaliacao: 4.5, cor: "#4A2A1A" },
+    ];
+
+    function Phone({ children, label }) {
+      return (
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
+          <div style={{
+            width: 320,
+            height: 640,
+            background: WHITE,
+            borderRadius: 38,
+            border: "8px solid #222226",
+            boxShadow: "0 25px 60px -15px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255,255,255,0.08)",
+            overflow: "hidden",
+            position: "relative",
+            display: "flex",
+            flexDirection: "column",
+          }}>
+            {/* Notch / Dynamic Island */}
+            <div style={{
+              position: "absolute", top: 8, left: "50%", transform: "translateX(-50%)",
+              width: 80, height: 20, background: "#111113", borderRadius: 12, zIndex: 30,
+              display: "flex", alignItems: "center", justifyContent: "flex-end", paddingRight: 8
+            }}>
+              <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#1e3a8a", opacity: 0.8 }} />
+            </div>
+            
+            <div style={{ flex: 1, overflow: "hidden", display: "flex", flexDirection: "column" }}>
+              {children}
+            </div>
+          </div>
+          <div style={{
+            fontSize: 11, fontWeight: 800, color: GOLD, letterSpacing: 1.2,
+            textTransform: "uppercase", background: "rgba(201, 168, 76, 0.12)", padding: "6px 16px", borderRadius: 20,
+            border: "1px solid rgba(201, 168, 76, 0.25)",
+            backdropFilter: "blur(8px)"
+          }}>
+            {label}
+          </div>
+        </div>
+      );
+    }
+
+    function StatusBar() {
+      return (
+        <div style={{
+          height: 38, background: WINE_RED, display: "flex", alignItems: "flex-end",
+          justifyContent: "space-between", padding: "0 18px 6px", flexShrink: 0
+        }}>
+          <span style={{ color: WHITE, fontSize: 10, fontWeight: 700, letterSpacing: -0.2 }}>09:41</span>
+          <span style={{ color: WHITE, fontSize: 10, letterSpacing: 2, display: "flex", gap: 3, alignItems: "center" }}>
+            <span style={{ fontSize: 8 }}>📶</span>
+            <span style={{ fontSize: 9 }}>🔋</span>
+          </span>
+        </div>
+      );
+    }
+
+    function Tag({ label }) {
+      return (
+        <span style={{
+          fontSize: 9, background: `${WINE_RED}15`, color: WINE_RED,
+          padding: "3px 8px", borderRadius: 8, fontWeight: 700, whiteSpace: "nowrap"
+        }}>
+          {label}
+        </span>
+      );
+    }
+
+    function Stars({ n }) {
+      return (
+        <span style={{ color: GOLD, fontSize: 11, display: "inline-flex", alignItems: "center", gap: 3 }}>
+          <span>{"★".repeat(Math.floor(n))}{"☆".repeat(5 - Math.floor(n))}</span>
+          <span style={{ color: GRAY, fontSize: 9, fontWeight: 700, marginLeft: 2 }}>{n}</span>
+        </span>
+      );
+    }
+
+    // TELA 1 - HOME
+    function TelaHome() {
+      return (
+        <Phone label="Home">
+          <StatusBar />
+          {/* Header */}
+          <div style={{ background: WINE_RED, padding: "8px 16px 16px", flexShrink: 0 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+              <div>
+                <div style={{ color: `${WHITE}99`, fontSize: 9, fontWeight: 600, textTransform: "uppercase", letterSpacing: 0.5 }}>Destino</div>
+                <div style={{ color: WHITE, fontSize: 14, fontWeight: 800, letterSpacing: -0.2 }}>
+                  Uva e Vinho • Serra Gaúcha
+                </div>
+              </div>
+              <div style={{
+                width: 32, height: 32, borderRadius: 16, background: "rgba(255,255,255,0.18)",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                color: WHITE, fontSize: 15, cursor: "pointer"
+              }}>👤</div>
+            </div>
+            {/* Search */}
+            <div style={{
+              background: WHITE, borderRadius: 12, padding: "8px 12px",
+              display: "flex", alignItems: "center", gap: 8,
+              boxShadow: "0 2px 8px rgba(0,0,0,0.1)"
+            }}>
+              <span style={{ fontSize: 13, color: GRAY }}>🔍</span>
+              <span style={{ fontSize: 11, color: GRAY }}>Buscar cidade ou estabelecimento...</span>
+            </div>
+          </div>
+
+          {/* Scroll area */}
+          <div style={{ flex: 1, overflowY: "auto", background: CREAM }}>
+            {/* Cidades */}
+            <div style={{ padding: "14px 16px 0" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+                <span style={{ fontSize: 13, fontWeight: 800, color: TEXT_DARK }}>Explorar por Cidade</span>
+                <span style={{ fontSize: 10, color: WINE_RED, fontWeight: 700, cursor: "pointer" }}>Ver todas →</span>
+              </div>
+              <div style={{ display: "flex", gap: 8, overflowX: "auto", paddingBottom: 6 }}>
+                {cidades.slice(0, 4).map((c, i) => (
+                  <div key={i} style={{
+                    minWidth: 80, background: WHITE, borderRadius: 12, padding: "10px 6px",
+                    textAlign: "center", boxShadow: "0 2px 6px rgba(0,0,0,0.05)",
+                    border: i === 0 ? `2px solid ${WINE_RED}` : "2px solid transparent",
+                    flexShrink: 0, cursor: "pointer"
+                  }}>
+                    <div style={{ fontSize: 20, marginBottom: 4 }}>{c.emoji}</div>
+                    <div style={{ fontSize: 9, fontWeight: 800, color: TEXT_DARK, lineHeight: 1.2 }}>{c.nome}</div>
+                    <div style={{ fontSize: 8, color: GRAY, marginTop: 2, fontWeight: 500 }}>{c.estabelecimentos} locais</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Destaques */}
+            <div style={{ padding: "14px 16px 0" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+                <span style={{ fontSize: 13, fontWeight: 800, color: TEXT_DARK }}>Em Destaque</span>
+                <span style={{ fontSize: 10, color: WINE_RED, fontWeight: 700, cursor: "pointer" }}>Ver todos →</span>
+              </div>
+              <div style={{ display: "flex", gap: 10, overflowX: "auto", paddingBottom: 6 }}>
+                {destaques.slice(0, 3).map((d, i) => (
+                  <div key={i} style={{
+                    minWidth: 155, borderRadius: 14, overflow: "hidden",
+                    boxShadow: "0 3px 10px rgba(0,0,0,0.08)", flexShrink: 0, background: WHITE,
+                    cursor: "pointer"
+                  }}>
+                    <div style={{
+                      height: 85, background: `linear-gradient(135deg, ${d.cor}, ${d.cor}cc)`,
+                      display: "flex", alignItems: "flex-end", padding: 8
+                    }}>
+                      <span style={{ fontSize: 8, background: "rgba(255,255,255,0.25)", color: WHITE, padding: "3px 7px", borderRadius: 8, fontWeight: 800 }}>
+                        {d.categoria}
+                      </span>
+                    </div>
+                    <div style={{ padding: "8px 10px" }}>
+                      <div style={{ fontSize: 11, fontWeight: 800, color: TEXT_DARK }}>{d.nome}</div>
+                      <div style={{ fontSize: 9, color: GRAY, marginTop: 2 }}>📍 {d.cidade}</div>
+                      <div style={{ display: "flex", gap: 4, marginTop: 6, flexWrap: "wrap" }}>
+                        {d.tags.slice(0, 2).map((t, j) => <Tag key={j} label={tags[t]} />)}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Categorias */}
+            <div style={{ padding: "14px 16px 16px" }}>
+              <div style={{ fontSize: 13, fontWeight: 800, color: TEXT_DARK, marginBottom: 10 }}>Categorias</div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
+                {[
+                  { icon: "🍷", label: "Vinícolas" },
+                  { icon: "🍽️", label: "Gastronomia" },
+                  { icon: "🏨", label: "Hospedagem" },
+                  { icon: "🌿", label: "Turismo" },
+                  { icon: "🎪", label: "Eventos" },
+                  { icon: "🛍️", label: "Artesanato" },
+                ].map((cat, i) => (
+                  <div key={i} style={{
+                    background: WHITE, borderRadius: 12, padding: "10px 4px",
+                    textAlign: "center", boxShadow: "0 2px 6px rgba(0,0,0,0.04)",
+                    cursor: "pointer"
+                  }}>
+                    <div style={{ fontSize: 20 }}>{cat.icon}</div>
+                    <div style={{ fontSize: 9, fontWeight: 700, color: TEXT_DARK, marginTop: 4 }}>{cat.label}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Nav */}
+          <div style={{
+            height: 56, background: WHITE, borderTop: "1px solid #E5E7EB",
+            display: "flex", alignItems: "center", justifyContent: "space-around", flexShrink: 0
+          }}>
+            {[
+              { icon: "🏠", label: "Início", active: true },
+              { icon: "🔍", label: "Buscar" },
+              { icon: "📍", label: "Cidades" },
+              { icon: "❤️", label: "Salvos" },
+            ].map((item, i) => (
+              <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2, cursor: "pointer" }}>
+                <span style={{ fontSize: 17 }}>{item.icon}</span>
+                <span style={{ fontSize: 8, color: item.active ? WINE_RED : GRAY, fontWeight: item.active ? 800 : 500 }}>
+                  {item.label}
+                </span>
+              </div>
+            ))}
+          </div>
+        </Phone>
+      );
+    }
+
+    // TELA 2 - LISTA
+    function TelaLista() {
+      const [filtroAtivo, setFiltroAtivo] = useState("Todos");
+      const filtros = ["Todos", "Vinícolas", "Gastronomia", "Hospedagem", "Turismo"];
+      
+      const listaFiltrada = estabelecimentos.filter(e => {
+        if (filtroAtivo === "Todos") return true;
+        if (filtroAtivo === "Vinícolas") return e.categoria === "Vinícola";
+        return e.categoria === filtroAtivo;
+      });
+
+      return (
+        <Phone label="Lista de Estabelecimentos">
+          <StatusBar />
+          {/* Header */}
+          <div style={{ background: WINE_RED, padding: "8px 16px 12px", flexShrink: 0 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+              <div style={{
+                flex: 1, background: "rgba(255,255,255,0.18)", borderRadius: 10, padding: "7px 12px",
+                display: "flex", alignItems: "center", gap: 6
+              }}>
+                <span style={{ color: "rgba(255,255,255,0.8)", fontSize: 11 }}>🔍</span>
+                <span style={{ color: "rgba(255,255,255,0.6)", fontSize: 10 }}>Buscar estabelecimento...</span>
+              </div>
+              <div style={{
+                width: 32, height: 32, background: "rgba(255,255,255,0.18)", borderRadius: 10,
+                display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer"
+              }}>
+                <span style={{ fontSize: 13 }}>⚙️</span>
+              </div>
+            </div>
+            {/* Filtros */}
+            <div style={{ display: "flex", gap: 6, overflowX: "auto", paddingBottom: 2 }}>
+              {filtros.map((f, i) => (
+                <div key={i} onClick={() => setFiltroAtivo(f)} style={{
+                  padding: "5px 12px", borderRadius: 20, flexShrink: 0, cursor: "pointer",
+                  background: filtroAtivo === f ? WHITE : "rgba(255,255,255,0.18)",
+                  color: filtroAtivo === f ? WINE_RED : WHITE,
+                  fontSize: 10, fontWeight: 800, transition: "all 0.15s ease"
+                }}>
+                  {f}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Resultados */}
+          <div style={{ flex: 1, overflowY: "auto", background: CREAM, padding: "12px" }}>
+            <div style={{ fontSize: 10, color: GRAY, fontWeight: 600, marginBottom: 8 }}>
+              {listaFiltrada.length} estabelecimentos encontrados
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              {listaFiltrada.map((e, i) => (
+                <div key={i} style={{
+                  background: WHITE, borderRadius: 14, overflow: "hidden",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.06)", display: "flex", cursor: "pointer"
+                }}>
+                  <div style={{
+                    width: 76, background: `linear-gradient(135deg, ${e.cor}, ${e.cor}88)`,
+                    flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center"
+                  }}>
+                    <span style={{ fontSize: 24 }}>🏛️</span>
+                  </div>
+                  <div style={{ padding: "10px 12px", flex: 1 }}>
+                    <div style={{ fontSize: 11, fontWeight: 800, color: TEXT_DARK }}>{e.nome}</div>
+                    <div style={{ fontSize: 9, color: WINE_RED, fontWeight: 700, marginTop: 2 }}>{e.categoria}</div>
+                    <div style={{ fontSize: 9, color: GRAY, marginTop: 2 }}>📍 {e.cidade}</div>
+                    <div style={{ marginTop: 6 }}>
+                      <Stars n={e.avaliacao} />
+                    </div>
+                  </div>
+                  <div style={{
+                    width: 28, display: "flex", alignItems: "center", justifyContent: "center",
+                    color: GRAY, fontSize: 15, paddingRight: 6
+                  }}>›</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Bottom Nav */}
+          <div style={{
+            height: 56, background: WHITE, borderTop: "1px solid #E5E7EB",
+            display: "flex", alignItems: "center", justifyContent: "space-around", flexShrink: 0
+          }}>
+            {[
+              { icon: "🏠", label: "Início" },
+              { icon: "🔍", label: "Buscar", active: true },
+              { icon: "📍", label: "Cidades" },
+              { icon: "❤️", label: "Salvos" },
+            ].map((item, i) => (
+              <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2, cursor: "pointer" }}>
+                <span style={{ fontSize: 17 }}>{item.icon}</span>
+                <span style={{ fontSize: 8, color: item.active ? WINE_RED : GRAY, fontWeight: item.active ? 800 : 500 }}>
+                  {item.label}
+                </span>
+              </div>
+            ))}
+          </div>
+        </Phone>
+      );
+    }
+
+    // TELA 3 - DETALHE
+    function TelaDetalhe() {
+      return (
+        <Phone label="Detalhe do Estabelecimento">
+          <div style={{ flex: 1, overflowY: "auto", display: "flex", flexDirection: "column" }}>
+            {/* Foto hero */}
+            <div style={{
+              height: 170, background: "linear-gradient(135deg, #7B3F00, #4A2A00)",
+              position: "relative", flexShrink: 0,
+              display: "flex", alignItems: "center", justifyContent: "center"
+            }}>
+              <span style={{ fontSize: 44, opacity: 0.4 }}>🍷</span>
+              {/* Back button */}
+              <div style={{
+                position: "absolute", top: 28, left: 12,
+                width: 32, height: 32, background: "rgba(255,255,255,0.85)", borderRadius: 10,
+                display: "flex", alignItems: "center", justifyContent: "center",
+                fontSize: 14, color: TEXT_DARK, cursor: "pointer", fontWeight: 800
+              }}>‹</div>
+              {/* Favorito */}
+              <div style={{
+                position: "absolute", top: 28, right: 12,
+                width: 32, height: 32, background: "rgba(255,255,255,0.85)", borderRadius: 10,
+                display: "flex", alignItems: "center", justifyContent: "center",
+                fontSize: 14, cursor: "pointer"
+              }}>♡</div>
+              {/* Badge categoria */}
+              <div style={{
+                position: "absolute", bottom: 10, left: 12,
+                background: WINE_RED, color: WHITE, fontSize: 9,
+                padding: "3px 10px", borderRadius: 10, fontWeight: 800
+              }}>Vinícola</div>
+            </div>
+
+            {/* Conteudo */}
+            <div style={{ background: WHITE, flex: 1, padding: "14px 16px" }}>
+              <div style={{ fontSize: 16, fontWeight: 900, color: TEXT_DARK, lineHeight: 1.2 }}>
+                Vinícola Bebber
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 4 }}>
+                <Stars n={4.8} />
+                <span style={{ fontSize: 9, color: GRAY }}>(127 avaliações)</span>
+              </div>
+              <div style={{ fontSize: 10, color: GRAY, marginTop: 4 }}>📍 Garibaldi, RS</div>
+
+              {/* Amenidades */}
+              <div style={{ marginTop: 12 }}>
+                <div style={{ fontSize: 11, fontWeight: 800, color: TEXT_DARK, marginBottom: 6 }}>O que oferece</div>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
+                  {Object.values(tags).map((t, i) => (
+                    <Tag key={i} label={t} />
+                  ))}
+                </div>
+              </div>
+
+              {/* Descricao */}
+              <div style={{ marginTop: 12 }}>
+                <div style={{ fontSize: 11, fontWeight: 800, color: TEXT_DARK, marginBottom: 4 }}>Sobre</div>
+                <div style={{ fontSize: 10, color: TEXT_MID, lineHeight: 1.6 }}>
+                  Vinícola familiar com mais de 80 anos de tradição na produção de vinhos finos da Serra Gaúcha. 
+                  Oferece degustações guiadas, tours pelos parreirais e gastronomia típica italiana.
+                </div>
+              </div>
+
+              {/* Horarios */}
+              <div style={{ marginTop: 12 }}>
+                <div style={{ fontSize: 11, fontWeight: 800, color: TEXT_DARK, marginBottom: 6 }}>Horários</div>
+                {[
+                  { dia: "Seg - Sex", hora: "09h às 18h" },
+                  { dia: "Sábados", hora: "09h às 17h" },
+                  { dia: "Domingos", hora: "10h às 15h" },
+                ].map((h, i) => (
+                  <div key={i} style={{
+                    display: "flex", justifyContent: "space-between",
+                    padding: "4px 0", borderBottom: i < 2 ? "1px solid #F3F4F6" : "none"
+                  }}>
+                    <span style={{ fontSize: 10, color: GRAY }}>{h.dia}</span>
+                    <span style={{ fontSize: 10, fontWeight: 700, color: TEXT_DARK }}>{h.hora}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Botoes de acao */}
+          <div style={{
+            background: WHITE, padding: "10px 14px 14px",
+            borderTop: "1px solid #E5E7EB", display: "flex", gap: 8, flexShrink: 0
+          }}>
+            <div style={{
+              flex: 1, background: "#25D366", borderRadius: 12, padding: "9px",
+              textAlign: "center", color: WHITE, fontSize: 11, fontWeight: 800, cursor: "pointer"
+            }}>
+              📱 WhatsApp
+            </div>
+            <div style={{
+              flex: 1, background: WINE_RED, borderRadius: 12, padding: "9px",
+              textAlign: "center", color: WHITE, fontSize: 11, fontWeight: 800, cursor: "pointer"
+            }}>
+              🌐 Ver Site
+            </div>
+            <div style={{
+              width: 38, background: LIGHT_GRAY, borderRadius: 12,
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontSize: 15, cursor: "pointer"
+            }}>
+              📤
+            </div>
+          </div>
+        </Phone>
+      );
+    }
+
+    // TELA 4 - CIDADES
+    function TelaCidades() {
+      return (
+        <Phone label="Cidades">
+          <StatusBar />
+          <div style={{ background: WINE_RED, padding: "8px 16px 14px", flexShrink: 0 }}>
+            <div style={{ color: "rgba(255,255,255,0.7)", fontSize: 9, marginBottom: 2, textTransform: "uppercase", fontWeight: 600 }}>Região</div>
+            <div style={{ color: WHITE, fontSize: 15, fontWeight: 900 }}>Serra Gaúcha</div>
+            <div style={{ color: "rgba(255,255,255,0.75)", fontSize: 10, marginTop: 2 }}>
+              {cidades.reduce((a, c) => a + c.estabelecimentos, 0)} estabelecimentos em {cidades.length} cidades
+            </div>
+          </div>
+
+          <div style={{ flex: 1, overflowY: "auto", background: CREAM, padding: "12px" }}>
+            {/* Busca */}
+            <div style={{
+              background: WHITE, borderRadius: 12, padding: "8px 12px",
+              display: "flex", alignItems: "center", gap: 8, marginBottom: 12,
+              boxShadow: "0 2px 6px rgba(0,0,0,0.05)"
+            }}>
+              <span style={{ fontSize: 13, color: GRAY }}>🔍</span>
+              <span style={{ fontSize: 10, color: GRAY }}>Buscar cidade...</span>
+            </div>
+
+            {/* Grid de cidades */}
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+              {cidades.map((c, i) => (
+                <div key={i} style={{
+                  background: WHITE, borderRadius: 14, overflow: "hidden",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.06)", cursor: "pointer"
+                }}>
+                  <div style={{
+                    height: 65,
+                    background: `linear-gradient(135deg, ${WINE_RED}, ${WINE_LIGHT})`,
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    fontSize: 26
+                  }}>
+                    {c.emoji}
+                  </div>
+                  <div style={{ padding: "8px 10px" }}>
+                    <div style={{ fontSize: 10, fontWeight: 800, color: TEXT_DARK, lineHeight: 1.2 }}>{c.nome}</div>
+                    <div style={{ fontSize: 9, color: GRAY, marginTop: 2 }}>{c.estabelecimentos} locais</div>
+                    <div style={{
+                      marginTop: 6, fontSize: 9, color: WINE_RED, fontWeight: 800,
+                      display: "flex", alignItems: "center", gap: 2
+                    }}>
+                      Explorar →
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Bottom Nav */}
+          <div style={{
+            height: 56, background: WHITE, borderTop: "1px solid #E5E7EB",
+            display: "flex", alignItems: "center", justifyContent: "space-around", flexShrink: 0
+          }}>
+            {[
+              { icon: "🏠", label: "Início" },
+              { icon: "🔍", label: "Buscar" },
+              { icon: "📍", label: "Cidades", active: true },
+              { icon: "❤️", label: "Salvos" },
+            ].map((item, i) => (
+              <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2, cursor: "pointer" }}>
+                <span style={{ fontSize: 17 }}>{item.icon}</span>
+                <span style={{ fontSize: 8, color: item.active ? WINE_RED : GRAY, fontWeight: item.active ? 800 : 500 }}>
+                  {item.label}
+                </span>
+              </div>
+            ))}
+          </div>
+        </Phone>
+      );
+    }
+
+    function App() {
+      return (
+        <div style={{
+          minHeight: "100vh",
+          background: `linear-gradient(135deg, #140508 0%, #250A10 50%, #140508 100%)`,
+          padding: "40px 24px",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center"
+        }}>
+          {/* Header Superior */}
+          <div style={{ textAlign: "center", marginBottom: 40, maxWidth: 650 }}>
+            <div style={{
+              display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(201, 168, 76, 0.15)",
+              border: "1px solid rgba(201, 168, 76, 0.3)",
+              color: GOLD, fontSize: 11, fontWeight: 800, letterSpacing: 1.5,
+              padding: "5px 16px", borderRadius: 20, marginBottom: 14, textTransform: "uppercase"
+            }}>
+              <span>📱</span> Wireframes — App Mobile
+            </div>
+            <h1 style={{ color: WHITE, fontSize: 32, fontWeight: 900, letterSpacing: -0.8, marginBottom: 8 }}>
+              AtuaSerra
+            </h1>
+            <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 14, lineHeight: 1.5 }}>
+              Guia Turístico da Serra Gaúcha • Referência visual de telas para React Native / Expo
+            </p>
+          </div>
+
+          {/* Grid com os 4 Telefones */}
+          <div style={{
+            display: "flex", gap: 32, justifyContent: "center",
+            flexWrap: "wrap", alignItems: "flex-start", width: "100%", maxWidth: 1400
+          }}>
+            <TelaHome />
+            <TelaLista />
+            <TelaDetalhe />
+            <TelaCidades />
+          </div>
+
+          {/* Legenda e Notas */}
+          <div style={{
+            marginTop: 48, width: "100%", maxWidth: 960,
+            background: "rgba(255,255,255,0.04)", borderRadius: 20, padding: "24px 28px",
+            border: "1px solid rgba(255,255,255,0.08)",
+            backdropFilter: "blur(10px)",
+            boxShadow: "0 20px 40px rgba(0,0,0,0.3)"
+          }}>
+            <div style={{ color: GOLD, fontSize: 12, fontWeight: 900, marginBottom: 16, letterSpacing: 1.2, textTransform: "uppercase" }}>
+              📋 Estrutura e Notas de Design
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16 }}>
+              {[
+                { tela: "1. Home", desc: "Busca superior, carrossel de cidades, cards de destaque horizontais e grid de categorias rápidas com bottom bar." },
+                { tela: "2. Lista", desc: "Filtros horizontais no cabeçalho por categoria, cards com foto, classificação e endereço." },
+                { tela: "3. Detalhe", desc: "Banner hero fotográfico, tags de amenidades, descrição histórica, horários de atendimento e botões de ação rápida." },
+                { tela: "4. Cidades", desc: "Grade com cartões visuais para cada município com contagem de estabelecimentos cadastrados." },
+              ].map((n, i) => (
+                <div key={i} style={{ display: "flex", gap: 10 }}>
+                  <div style={{
+                    width: 4, borderRadius: 2, background: WINE_RED, flexShrink: 0, alignSelf: "stretch"
+                  }} />
+                  <div>
+                    <div style={{ color: WHITE, fontSize: 12, fontWeight: 800, marginBottom: 3 }}>{n.tela}</div>
+                    <div style={{ color: "rgba(255,255,255,0.65)", fontSize: 11, lineHeight: 1.5 }}>{n.desc}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div style={{
+              marginTop: 18, paddingTop: 14, borderTop: "1px solid rgba(255,255,255,0.08)",
+              color: "rgba(255,255,255,0.5)", fontSize: 10, lineHeight: 1.6
+            }}>
+              🎨 <b>Identidade Visual:</b> Vinho Bordô (<code style={{ color: "#E095A2" }}>#6B1A2A</code>), Dourado Colonial (<code style={{ color: "#E5C875" }}>#C9A84C</code>) e Fundo Creme (<code style={{ color: "#FAF7F2" }}>#FAF7F2</code>) — compatível com a identidade de <em>serragaucha.com</em>.
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+1. 🌦️ Clima e Temperatura em Tempo Real (Fator Decisivo na Serra)
+Por que é valioso: Na serra, o tempo muda rápido. Um dia de garoa e frio (12°C) pede vinhos tintos, fondues, cafés coloniais e lareira; um dia de sol (24°C) pede piqueniques nos vinhedos, mirantes e trilhas.
+Ideia: Exibir a temperatura atual junto ao badge de localização no topo (ex: ⛅ 16°C • Bento Gonçalves) e cruzar isso com o algoritmo do No Momento para sugerir programas sob medida para o clima daquele instante.
+2. 📲 Compartilhar Roteiro via WhatsApp (Viralidade)
+Por que é valioso: Geralmente as pessoas viajam em casal, família ou grupos de amigos. Quem planeja o roteiro no app quer compartilhar a programação com os outros participantes.
+Ideia: Um botão no menu Roteiro que gera uma mensagem formatada pronta para enviar no WhatsApp:
+"🗺️ Nosso Roteiro na Serra Gaúcha:
+1ª Parada: Vinícola Bebber (Garibaldi)
+2ª Parada: Restaurante Farina (Bento Gonçalves)
+3ª Parada: Cascata dos Calza (Bento)
+Distância total: 24.5 km • Tempo estimado: ~38 min
+Abrir Rota no GPS: https://maps.google.com/..."
+
+3. 🗺️ Modo Mapa Interativo com Pins
+Por que é valioso: Turistas adoram ver visualmente "onde as coisas ficam" no mapa geográfico da região.
+Ideia: Um botão flutuante "Ver no Mapa" que exibe os estabelecimentos em pins coloridos por categoria e desenha a linha da rota conectando as paradas selecionadas.
+4. 📶 Modo Offline do Roteiro (Salva-Vidas no Interior)
+Por que é valioso: Várias estradas rurais, linhas coloniais e vales (como partes do Vale dos Vinhedos e Rio das Antas) sofrem com sinal fraco ou oscilante de internet 4G/5G.
+Ideia: Garantir que todos os locais do roteiro (endereços, telefones, horários e pontos GPS) fiquem 100% disponíveis offline sem precisar de conexão.
+5. ⚡ Filtro Rápido "Aberto Agora" na Busca Geral
+Por que é valioso: Quando a pessoa está na rua ou na estrada às 15h30 e procura uma vinícola ou café aberto, ela não quer clicar em opções que já fecharam.
+Ideia: Adicionar um chip/toggle 🟢 Aberto Agora direto na barra de filtros da busca e categorias.
