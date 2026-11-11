@@ -1,117 +1,113 @@
-# Aplicativo de Turismo para Veranópolis e Serra Gaúcha
+<div align="center">
+Tourism Mobile App
+Explore Veranópolis and Serra Gaúcha, Brazil
+A cross-platform tourism experience built with React Native, Expo, and TypeScript.
+Discover places, explore regional news, find nearby attractions, save favorites, and plan multi-stop itineraries—all from your phone.
+Features · Screenshots · Tech Stack · Getting Started · Limitations
+</div>
+> **Project status:** Functional prototype / portfolio project. The app consumes tourism data from an **existing institutional platform** associated with Atuaserra and `serragaucha.com`; it does **not** implement or replace that platform's backend. “Tourism Mobile App” is the repository title, not an official app or partner brand.
+🎯 Overview
+Tourism information for Veranópolis and Serra Gaúcha is already available through a centralized website and institutional APIs. This project explores what a mobile-first experience can add to that foundation: location-aware discovery, contextual recommendations, saved places, and itinerary planning.
+The goal is to make existing information easier to use while traveling—not to recreate the original content platform.
+✨ Features
+Feature	What it does
+Explore & search	Browse featured places, cities, categories, establishments, and regional news; filter results and sort by proximity.
+Place details	View available details, operating hours, contact actions, sharing, and links to navigation apps.
+Location awareness	Request device location with `expo-location`, identify a nearby municipality, or select a city manually.
+“No Momento” recommendations	Rank venues using available reputation data, operating status, time of day, season, and proximity.
+Favorites	Save places locally with AsyncStorage.
+Itinerary planning	Organize selected places using a nearest-neighbor heuristic and estimated geographic distances.
+Maps & directions	Send an itinerary to Google Maps or navigate to its first stop with Waze, subject to platform support.
+News	Read regional articles and event-related content from institutional data sources.
+Offline-tolerant data access	Reuse a 30-minute cache of previously retrieved institutional data when appropriate.
+How recommendations work
+The “No Momento” feature is a rule-based ranking algorithm, not a machine-learning or generative-AI model. Its configured score weights are:
+Reputation: 35%
+Operating status: 35%
+Context (time/season): 20%
+Proximity: 10%
+Open or soon-to-open places are prioritized ahead of closed ones, followed by weighted scoring. A 60-minute upcoming-opening window is included in the contextual logic. Actual opening hours depend on data quality and may not reflect holiday exceptions.
+How itinerary optimization works
+The app uses a nearest-neighbor heuristic to select the next unvisited destination closest to the current position. Distances are calculated geographically with the Haversine formula, and travel time is approximated using a reference speed of 45 km/h.
+This approach is fast, but does not guarantee the globally shortest route. Distances are not road-network distances, and estimates do not account for traffic or terrain.
+📱 Screenshots
+These screenshots are included in the repository and illustrate the existing prototype. They are not evidence of post-refactor device testing; some displayed values may be demonstrative.
+Home	No Momento	Optimized itinerary	News details
+<img src="docs/screenshots/home.png" alt="Home screen" width="190" />	<img src="docs/screenshots/no_momento.png" alt="Contextual recommendations" width="190" />	<img src="docs/screenshots/roteiro_otimizado.png" alt="Itinerary screen" width="190" />	<img src="docs/screenshots/noticia_detalhe.png" alt="News detail screen" width="190" />
+🛠 Tech Stack
+Technology	Purpose
+React Native 0.86.3 / React 19.2.3	Cross-platform UI
+Expo SDK 57	Development workflow and device integrations
+TypeScript (strict mode)	Static typing and safer contracts
+React Navigation 7	Bottom tabs and stack navigation
+expo-location	Device permissions, geolocation, and reverse geocoding
+AsyncStorage	Persistent favorites, itineraries, and institutional cache
 
-Aplicativo em React Native, Expo e TypeScript que facilita a descoberta de estabelecimentos, cidades e notícias da região e o planejamento de visitas em dispositivos móveis e Web.
-
-O projeto **consome dados de uma plataforma turística já existente**, por meio da API institucional do AtuaSerra e das mídias de serragaucha.com. Acrescenta favoritos, roteiros, localização e recomendação contextual. Não representa um novo backend nem um produto oficialmente nomeado por essa plataforma. Identificadores técnicos anteriores foram preservados para compatibilidade.
-
-## Problema e objetivos
-
-Reunir informações turísticas regionais em uma interface móvel, facilitar a busca por cidade e categoria e apoiar o planejamento de deslocamentos. O projeto demonstra integração de serviços, persistência local e algoritmos próprios, sem substituir a plataforma de origem.
-
-## Funcionalidades implementadas
-
-- Início com destaques, categorias, cidades e notícias; busca com filtros e ordenação por proximidade.
-- Detalhes de estabelecimentos, horários disponíveis, contato, compartilhamento e acesso a aplicativos de navegação.
-- Favoritos e roteiro persistidos com AsyncStorage, preservando as chaves e o formato das listas anteriores.
-- Localização com `expo-location`, solicitação de permissão e seleção manual de cidade pelo controle de localização.
-- “No Momento”: ranking contextual por reputação disponível, funcionamento, período do dia, estação do ano e proximidade; simulação de horários e janela de abertura de 60 minutos.
-- Roteiro com heurística do **vizinho mais próximo**, coordenadas geográficas e envio de paradas ao Google Maps; Waze para a primeira parada.
-- Cache institucional com validade de 30 minutos e uso de dados reais expirados quando a rede falha.
-
-A recomendação usa regras locais, sem IA generativa. Pesos preservados: reputação 35%, funcionamento 35%, contexto 20% e proximidade 10%. Locais operando ou prestes a abrir têm prioridade sobre os fechados; depois aplica-se a pontuação.
-
-### Dependências externas
-
-Catálogo e notícias dependem da disponibilidade e do contrato da API institucional. Avaliações Google Places e Yelp possuem módulos implementados, mas as chamadas ao vivo exigem um **backend HTTPS seguro configurado separadamente**. A tela de detalhes usa Yelp; o módulo e o componente de Google permanecem disponíveis no código. Sem backend de avaliações, o aplicativo usa os dados já cadastrados e não envia chamadas aos provedores.
-
-### Dados reais, cache e demonstração
-
-O modo normal usa API e cache real; falhas sem cache resultam em listas vazias, detalhes indisponíveis ou dados já recebidos pela tela. Notas e quantidades de avaliações não são geradas. Zero no modelo indica ausência de nota; o componente de estrelas mostra “Sem avaliações”. Contagens de estabelecimentos só são exibidas quando informadas pelo serviço.
-
-As fixtures preexistentes de `src/constants/data.ts` são **demonstrativas**, sem garantia factual. Seu uso como fallback exige `EXPO_PUBLIC_DEMO_MODE=true`; mantenha `false` para uso real e publicação. Esse modo não substitui sistematicamente a API: só habilita as alternativas demonstrativas existentes quando necessário. Categorias, emojis, coordenadas municipais de referência e horários padrão são configurações locais, não informações atualizadas de funcionamento dos estabelecimentos.
-
-## Capturas de tela
-
-Capturas já presentes no repositório, preservadas durante a refatoração. Não constituem evidência de testes atuais em dispositivos.
-
-| Início | No Momento | Roteiro | Notícias |
-| --- | --- | --- | --- |
-| ![Início](docs/screenshots/home.png) | ![No Momento](docs/screenshots/no_momento.png) | ![Roteiro](docs/screenshots/roteiro_otimizado.png) | ![Notícia](docs/screenshots/noticia_detalhe.png) |
-
-## Tecnologias
-
-| Tecnologia | Uso |
-| --- | --- |
-| Expo SDK 57 / React Native 0.86.3 / React 19.2.3 | Android, iOS e Web |
-| TypeScript, modo estrito | Contratos e verificação estática |
-| React Navigation 7 | Native Stack e Bottom Tabs |
-| expo-location | Permissões, localização e geocodificação reversa |
-| AsyncStorage | Favoritos, roteiros e cache |
-| expo-web-browser / Linking | Sites e aplicativos externos |
-| Vitest / react-test-renderer | Testes de lógica, integração simulada e persistência |
-
-As versões nativas seguem o verificador do SDK instalado. O lockfile oficial é `pnpm-lock.yaml`.
-
-## Arquitetura
-
+Fetch API	HTTP requests to the institutional API
+expo-web-browser / Linking	External web pages and navigation apps
+Vitest / react-test-renderer	Automated logic, mocked integration, and persistence tests
+The project has its own Haversine distance calculation, contextual recommender, and nearest-neighbor itinerary optimizer. These are project implementations, not third-party optimization libraries.
+🗂 Project Structure
 ```text
-App.tsx                 # Providers e NavigationContainer
+App.tsx                  # App providers and navigation container
 src/
-  api/                  # Cliente HTTP, serviços, validação e avaliações via proxy
+  api/                   # HTTP client, data services, validation, reviews proxy
   components/
-    cards/              # Cards de cidades, estabelecimentos, roteiro e notícias
-    common/             # Estrelas, localização, tags e avaliações
-  constants/            # Tema, categorias, referências e fixtures demonstrativas
-  context/              # Localização, favoritos e roteiro
-  navigation/           # Pilha e abas existentes
-  screens/              # Sete telas preservadas
-  types/                # Modelos e contratos de navegação
-  utils/                # Haversine, recomendação, vizinho mais próximo e navegação
-tests/                  # Testes com mocks; sem chamadas reais de API
-docs/                   # Segurança, diagnóstico e capturas existentes
+    cards/               # Places, cities, news, recommendations, itinerary
+    common/              # Shared UI and review components
+  constants/             # Theme, reference data, optional demo fixtures
+  context/               # Location, favorites, itinerary state
+  navigation/            # Tab and stack navigation
+  screens/               # App screens
+  types/                 # Data models and navigation contracts
+  utils/                 # Geolocation, ranking, routes, deep links
+tests/                   # Automated tests using mocks
+docs/                    # Screenshots, security notes, refactor report
+scripts/                 # Developer utilities, including secrets check
 ```
-
-O hook compartilhado de persistência carrega dados antes das edições e serializa gravações. Dados corrompidos não são apagados nem sobrescritos automaticamente. Falha de gravação preserva o último estado salvo e produz um aviso sem conteúdo sensível.
-
-## Instalação
-
-Recomendado: **Node.js 24 LTS (24.3 ou superior)** e **pnpm 12.18.0**. Também são aceitas as versões de Node declaradas em `package.json`. Os comandos abaixo funcionam em PowerShell e terminais usuais após instalar Node e pnpm.
-
-```sh
+The persistence layer is designed to load existing data before edits, serialize writes, and avoid automatically overwriting corrupted stored data.
+🚀 Getting Started
+Prerequisites
+Node.js 24.3+ (or another version accepted by `package.json`: `^22.13.0 || ^24.3.0 || >=26.0.0`)
+pnpm 12.18.0 (as declared in `package.json`)
+An Android emulator/device, an iOS simulator on macOS, or a supported web browser
+1. Clone and install
+```bash
+git clone https://github.com/Kauanzembruski/tourism-mobile-app.git
+cd tourism-mobile-app
 npm install --global pnpm@12.18.0
 pnpm install --frozen-lockfile
 ```
-
-Não misture lockfiles de gerenciadores diferentes. Para usar pnpm sem instalação global, substitua `pnpm` por `npx --yes pnpm@12.18.0`.
-
-## Configuração
-
-Copie `.env.example` para `.env` (`Copy-Item .env.example .env` no PowerShell, ou `cp .env.example .env` no macOS/Linux).
-
-| Variável pública | Finalidade |
-| --- | --- |
-| `EXPO_PUBLIC_API_BASE_URL` | URL-base institucional; se ausente, preserva o endpoint HTTP original |
-| `EXPO_PUBLIC_REVIEWS_PROXY_URL` | URL HTTPS do backend de avaliações; vazia desabilita chamadas ao vivo |
-| `EXPO_PUBLIC_DEMO_MODE` | `false` por padrão; `true` permite fallback demonstrativo explícito |
-
-**Todas essas variáveis são públicas e podem aparecer no bundle. Nunca coloque chaves privadas, tokens ou senhas nelas.** O endpoint institucional original usa HTTP, com limitações de segurança e de execução no navegador/dispositivo. Não foi substituído por uma URL HTTPS não verificada. Veja [segurança e contrato do proxy](docs/SECURITY.md).
-
-Reinicie o Expo após alterar as variáveis; para limpar cache do bundler, use `pnpm start --clear`.
-
-## Desenvolvimento
-
-```sh
+`pnpm-lock.yaml` is the project's authoritative lockfile. Avoid mixing package managers and lockfiles.
+2. Configure the environment
+Copy `.env.example` to `.env`:
+```bash
+# macOS / Linux
+cp .env.example .env
+```
+```powershell
+# Windows PowerShell
+Copy-Item .env.example .env
+```
+Variable	Description
+`EXPO_PUBLIC_API_BASE_URL`	Institutional tourism API base URL. If unset, the original HTTP endpoint remains the fallback.
+`EXPO_PUBLIC_REVIEWS_PROXY_URL`	Optional HTTPS reviews backend. Leave unset to disable live Google/Yelp requests.
+`EXPO_PUBLIC_DEMO_MODE`	Defaults to `false`; `true` explicitly enables existing demonstration fallbacks where supported.
+> **Security:** Every `EXPO_PUBLIC_*` value is bundled into the client and can be inspected. **Never place private API keys, passwords, or access tokens in these variables.** See [Security Notes](docs/SECURITY.md).
+3. Run the app
+```bash
 pnpm start
+```
+Or launch a specific target:
+```bash
 pnpm android
 pnpm ios
 pnpm web
 ```
-
-Android requer emulador ou dispositivo configurado. O simulador iOS requer macOS e Xcode. Use uma versão de Expo Go compatível com o SDK 57 ou uma development build. No navegador, geolocalização depende de permissão e contexto seguro (HTTPS ou localhost); geocodificação reversa e abertura de aplicativos têm comportamento específico por plataforma.
-
-## Testes e verificação
-
-```sh
+The iOS simulator requires macOS and Xcode. An Expo Go version compatible with SDK 57 or a development build may be required. On web, geolocation generally requires HTTPS or `localhost` and user permission.
+After changing environment variables, restart Expo; `pnpm start --clear` can help clear bundler cache.
+✅ Tests & Quality Checks
+```bash
 pnpm typecheck
 pnpm test
 pnpm test:watch
@@ -120,38 +116,37 @@ pnpm exec expo install --check
 pnpm dlx expo-doctor
 pnpm audit
 ```
-
-Os testes cobrem Haversine, entradas inválidas, vizinho mais próximo e estabilidade, horários e ranking, erros HTTP, timeout, cancelamento, respostas inválidas, proxy não configurado, cache e gravações concorrentes. APIs e AsyncStorage são simulados; não são consumidas cotas de provedores. O scanner local é uma verificação heurística e não substitui revisão do histórico Git ou ferramentas de detecção de segredos.
-
-Para verificar a geração de bundles:
-
-```sh
+Tests cover geographical calculations, invalid inputs, route ordering, contextual scoring, HTTP failures/timeouts, API response validation, cache, and concurrent persistence. External APIs and AsyncStorage are mocked in automated tests; these do not replace real-device tests.
+To validate JavaScript bundle export:
+```bash
 pnpm exec expo export --platform web --output-dir dist/web
 pnpm exec expo export --platform android --platform ios --output-dir dist/native
 ```
-
-Exportar JavaScript não equivale a compilar binários nativos, instalar em dispositivos ou testar a navegação visual. Resultados e pendências estão em [registro da refatoração](docs/REFATORACAO.md).
-
-## Limitações conhecidas
-
-- HTTP institucional transmite dados sem proteção TLS; pode ser bloqueado por mixed content, ATS e políticas de cleartext. A correção depende do operador do servidor, além de CORS adequado para Web.
-- Google/Yelp exigem backend HTTPS separado, cotas e conformidade com os termos de cada provedor. Nenhum backend foi criado nesta revisão.
-- Haversine fornece distância em linha reta; tempo usa referência de 45 km/h. O vizinho mais próximo não garante solução ótima do problema do caixeiro viajante. Valores exibidos são **estimativas**, sem trânsito nem malha viária.
-- Sem coordenadas válidas, preserva-se a referência do município e, em último caso, Bento Gonçalves. Não corresponde à posição exata do estabelecimento. Confira o destino no aplicativo de mapas. Google Maps pode limitar a quantidade de waypoints aceita.
-- Funcionamento usa horários disponíveis e heurísticas de categoria; exceções de abertura são consultadas nos detalhes, mas não entram no ranking. Horários especiais, virada de dia e fuso do aparelho exigem validação adicional; não há garantia de abertura real.
-- Sem GPS, o roteiro parte do primeiro destino; cidade manual representa o centro municipal, não GPS preciso. Localização é armazenada localmente sem criptografia por AsyncStorage.
-- Dados antigos de favoritos/roteiros são preservados, inclusive avaliações salvas antes da revisão; não há como atribuir retrospectivamente sua origem com segurança.
-- O cache pode estar desatualizado quando utilizado offline. Respostas paginadas ou alterações no contrato institucional exigem adaptação explícita.
-- Não foram realizadas avaliações de usabilidade/aceitação nem testes em dispositivo/emulador nesta revisão. Há alertas moderados pendentes na cadeia de ferramentas do Expo, detalhados no registro.
-
-## Próximos passos planejados
-
-Disponibilizar TLS no servidor institucional, integrar um backend de avaliações com autorização e limites de uso, testar Android/iOS/Web em dispositivos reais, validar horários especiais/fusos e conduzir avaliação de usabilidade. Essas atividades não são apresentadas como concluídas.
-
-## Publicação segura no GitHub
-
-Siga [o checklist de publicação](docs/SECURITY.md#publicação-no-github). Revogue as credenciais anteriormente expostas antes de publicar, revise os arquivos preparados para commit e habilite secret scanning/push protection quando disponível. Esta pasta foi recebida sem `.git`; o histórico anterior não pôde ser inspecionado.
-
-## Licença
-
-Veja [LICENSE](LICENSE). Confira separadamente permissões de redistribuição de dados, imagens e marcas das plataformas de origem; a licença do código não concede automaticamente esses direitos.
+Exporting a bundle is not equivalent to building and testing a native app. See the Refactoring Report for recorded checks and pending items.
+🔌 Data Sources & Demo Mode
+The app relies on an existing institutional tourism API for catalog and news data. It also uses media associated with `serragaucha.com`. Availability, accuracy, and updates depend on those external services.
+Live reviews integrations have Google Places and Yelp modules, but require a separately configured secure HTTPS backend; private provider credentials are not shipped in the mobile client. Without that backend, the app uses already available data and does not make direct review-provider requests.
+By default, the app uses actual API responses and cached real data. Existing fixtures in `src/constants/data.ts` are demonstration data and are only enabled as applicable fallbacks when `EXPO_PUBLIC_DEMO_MODE=true`. Do not treat example venues, coordinates, ratings, or schedules as verified live information. Missing ratings are presented as unavailable rather than fabricated.
+⚠️ Known Limitations
+Institutional API over HTTP: The original endpoint is not protected by TLS, potentially causing mobile platform restrictions and browser mixed-content errors. Production use requires a verified HTTPS endpoint and suitable CORS configuration.
+External reviews: Live Google/Yelp access requires a separate HTTPS backend, appropriate authorization, quotas, and compliance with provider terms.
+Approximate routes: Haversine computes geographic rather than road distances; the nearest-neighbor heuristic is not guaranteed optimal, and the 45 km/h travel time is only an estimate.
+Location fallbacks: A manually selected city represents a municipal reference point, not precise GPS coordinates; the app may use a default regional reference when valid coordinates are unavailable.
+Opening hours: Schedule-based recommendations cannot guarantee a business is open, particularly on holidays or during special events.
+Offline behavior: Cached information can become stale. Offline operation is partial, not a guarantee that all pages and features work without a connection.
+Validation scope: User usability/acceptance studies and post-refactor real-device tests are still pending.
+🗺 Roadmap
+[ ] Enable HTTPS for the institutional API.
+[ ] Integrate a secure reviews backend with appropriate access controls.
+[ ] Validate the app on physical Android and iOS devices.
+[ ] Improve holiday/special-hours handling and timezone validation.
+[ ] Evaluate usability and technology acceptance with users and tourism businesses (e.g., SUS and TAM).
+[ ] Explore road-network-based itinerary estimates.
+🔐 Security & Responsible Publication
+Review docs/SECURITY.md before deployment or publishing changes. Any API credentials previously committed should be revoked or rotated, because removing them from current source files does not remove them from Git history. The local secret check is heuristic and is not a substitute for repository-wide secret scanning.
+📄 License & Attribution
+See LICENSE for the source-code license. External data, images, names, and trademarks remain subject to their respective owners' permissions and terms.
+---
+<div align="center">
+Built as a mobile tourism and software engineering portfolio project focused on Serra Gaúcha, Brazil.
+</div>
