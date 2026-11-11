@@ -197,22 +197,6 @@ By default, the app uses actual API responses and cached real data. Existing fix
 - **Offline behavior:** Cached information can become stale. Offline operation is partial, not a guarantee that all pages and features work without a connection.
 - **Validation scope:** User usability/acceptance studies and post-refactor real-device tests are still pending.
 
-## 🗺 Roadmap
-
-- [ ] Enable HTTPS for the institutional API.
-- [ ] Integrate a secure reviews backend with appropriate access controls.
-- [ ] Validate the app on physical Android and iOS devices.
-- [ ] Improve holiday/special-hours handling and timezone validation.
-- [ ] Evaluate usability and technology acceptance with users and tourism businesses (e.g., SUS and TAM).
-- [ ] Explore road-network-based itinerary estimates.
-
-## 🔐 Security & Responsible Publication
-
-Review [docs/SECURITY.md](docs/SECURITY.md) before deployment or publishing changes. Any API credentials previously committed should be **revoked or rotated**, because removing them from current source files does not remove them from Git history. The local secret check is heuristic and is not a substitute for repository-wide secret scanning.
-
-## 📄 License & Attribution
-
-See [LICENSE](LICENSE) for the source-code license. External data, images, names, and trademarks remain subject to their respective owners' permissions and terms.
 
 ---
 
